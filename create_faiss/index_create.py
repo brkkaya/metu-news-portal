@@ -2,11 +2,13 @@ from typing import List, Union
 from langchain_community.vectorstores.faiss import FAISS
 from FlagEmbedding import BGEM3FlagModel
 from langchain_core.embeddings import Embeddings
+
 import json
 from langchain.schema import Document
 from langchain_community.vectorstores.faiss import DistanceStrategy
 
 
+# load data
 class EmbeddingService(Embeddings):
 
     def __init__(self, retrieval_service_name: str):
@@ -30,18 +32,26 @@ class EmbeddingService(Embeddings):
 
 
 embedding_model = EmbeddingService("BAAI/bge-m3")
-# load data
-with open("data/games.jsonl", "r") as f:
-    data_games = [json.loads(line) for line in f]
 
-with open("data/news.jsonl", "r") as f:
-    data_news = [json.loads(line) for line in f][:1000]
+jsonl_files = [
+    # ("data_raw/games_summary_fixed.jsonl","game"),
+    ("data_raw/metu_scrape_summary_fixed.jsonl",'metu'),
+    ("data_raw/news_summary_fixed.jsonl","sports"),
+    ("data_raw/yeni_cnbc_sanat_summary_fixed.jsonl","art"),
+    ("data_raw/yeni_economist_bilim_summary_fixed.jsonl","science"),
+    ("data_raw/yeni_guardian_sanat_summary_fixed.jsonl","art"),
+    ("data_raw/yeni_sciencenews_bilim_summary_fixed.jsonl","science"),
+    ("data_raw/yeni_webtekno_bilim_summary_fixed.jsonl","science"),
+]
 
-texts = [d["body"] for d in data_games]
-texts += [d["text"] for d in data_news]
-
-metadata = [{"url": d["url"], "title": d["title"], "img_url": d["img_url"], "topic": "game"} for d in data_games]
-metadata += [{"title": d["title"], "img_url": d["img_url"], "topic": "news"} for d in data_news]
+metadata = []
+texts = []
+for file,topic in jsonl_files:
+    with open(file, "r") as f:
+        data = [json.loads(line) for line in f]
+        texts += [d["body"] for d in data]
+        metadata += [{"title": d["title"],"url":d.get("url",None), "img_url": d["img_url"], "summary":d['answer'],"topic": topic} for d in data]
+        
 # Step 2: Create a list of LangChain Documents
 documents = []
 for text, meta in zip(texts, metadata):
@@ -55,4 +65,3 @@ vector_store = FAISS.from_documents(
 )
 
 vector_store.save_local("faiss_game_new")
-
