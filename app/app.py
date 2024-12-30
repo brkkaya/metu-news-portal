@@ -1,6 +1,5 @@
 from typing import List
 from fastapi import FastAPI
-
 from embedding_service import EmbeddingService
 from news_schema import NewsSchema, QuerySchema, UserSchema
 from reranker_service import RerankerService
@@ -10,7 +9,7 @@ import uvicorn
 
 app = FastAPI()
 reranker = RerankerService("BAAI/bge-reranker-v2-m3")
-vector_db = Engine("faiss_game_new", EmbeddingService("BAAI/bge-m3"), reranker=reranker)
+vector_db = Engine("faiss_news_portal", EmbeddingService("BAAI/bge-m3"), reranker=reranker)
 
 
 def convert_faiss_to_document(faiss_document: Document):

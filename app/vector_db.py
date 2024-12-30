@@ -59,7 +59,7 @@ class Engine:
                 seen.add(doc.page_content)
         sorted_docs_by_query = self.reranker.sort_documents(unique_docs, queries[-1])
         sorted_docs_by_doc = self.reranker.sort_documents(unique_docs, documents[-1].page_content)
-        
+
         docs = rank_fusion([sorted_docs_by_query, sorted_docs_by_doc])
         return docs
 
