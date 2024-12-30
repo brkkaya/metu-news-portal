@@ -10,6 +10,7 @@ class NewsSchema(models.Model):
     url = models.TextField(null=True)
     date = models.DateTimeField(null=True)
     topic = models.TextField(null=True)
+    summary = models.TextField(null=True)
 
 
 class QuerySchema(models.Model):

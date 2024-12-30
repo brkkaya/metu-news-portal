@@ -14,7 +14,7 @@ class Engine:
         self.vector_store = FAISS.load_local(index_path, embedding_model, allow_dangerous_deserialization=True)
         self.bm25_service = BM25Service()
         self.reranker = reranker
-        self.user_history = UserHistoryService("data/user_history_doc.json", "data/user_history_query.json")
+        self.user_history = UserHistoryService("user_history/user_history_doc.json", "user_history/user_history_query.json")
         self.load_data()
 
     def load_data(self):
@@ -46,10 +46,10 @@ class Engine:
         ]
         docs: List[Document] = []
         for document in documents:
-            docs += self.search(document.page_content, 5, apply_rerank=False)
+            docs += self.search(document.page_content, 1, apply_rerank=False)
 
         for query in queries:
-            docs += self.search(query, 5, apply_rerank=False)
+            docs += self.search(query, 1, apply_rerank=False)
 
         seen = set()
         unique_docs = []

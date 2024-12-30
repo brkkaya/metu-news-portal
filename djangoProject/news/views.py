@@ -8,7 +8,7 @@ from news.utilities import convert_faiss_to_document
 from news.vector_db import Engine
 
 reranker = RerankerService("BAAI/bge-reranker-v2-m3")
-vector_db = Engine("faiss_game_new", EmbeddingService("BAAI/bge-m3"), reranker=reranker)
+vector_db = Engine("faiss_news_portal", EmbeddingService("BAAI/bge-m3"), reranker=reranker)
 
 
 # Create your views here.
@@ -24,7 +24,7 @@ class HomePageView(View):
             three_items_below_main = response[1:4]
             side_news_items = response[4:9]
         else:
-            news_items = NewsSchema.objects.all()
+            news_items = NewsSchema.objects.order_by('?')
             main_news_item = news_items[0]
             three_items_below_main = news_items[1:4]
             side_news_items = news_items[4:9]
@@ -46,7 +46,7 @@ class RecommendResultsView(View):
     template_name = 'index.html'
 
     def get(self, request, *args, **kwargs):
-        documents = vector_db.recommend(request.user.username)
+        documents = vector_db.recommend("dereli_irem")
         response = [convert_faiss_to_document(document) for document in documents]
         main_news_item = response[0]
         three_items_below_main = response[1:4]

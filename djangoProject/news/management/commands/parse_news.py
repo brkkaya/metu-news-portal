@@ -18,20 +18,25 @@ class Command(BaseCommand):
                 for line in file:
                     try:
                         data = json.loads(line)
-                        data["date"] = data["date"].replace("Updated ", "").\
-                            replace("Published ", "").\
-                            replace("Updated: ", "").\
-                            replace(" ET", "").\
-                            replace("a.m.", "AM").replace("p.m.", "PM")
-                        data["date"] = datetime.datetime.strptime(data["date"], "%b. %d, %Y %I:%M %p")
+                        if 'date' in data:
+                            try:
+                                data["date"] = data["date"].replace("Updated ", "").\
+                                    replace("Published ", "").\
+                                    replace("Updated: ", "").\
+                                    replace(" ET", "").\
+                                    replace("a.m.", "AM").replace("p.m.", "PM")
+                                data["date"] = datetime.datetime.strptime(data["date"], "%b. %d, %Y %I:%M %p")
+                            except:
+                                data["date"] = datetime.datetime.fromisoformat(data["date"])
 
                         news_list.append(NewsSchema(
                             title=data.get('title'),
-                            content=data.get('content'),
+                            content=data.get('body'),
                             img_url=data.get('img_url'),
                             url=data.get('url'),
                             date=data.get('date'),
-                            topic=data.get('topic')
+                            topic='Science',
+                            summary=data.get('answer'),
                         ))
                         self.stdout.write(self.style.SUCCESS(f"Created news item: {data.get('title')}"))
                     except json.JSONDecodeError as e:
@@ -44,5 +49,4 @@ class Command(BaseCommand):
         except Exception as e:
             self.stderr.write(self.style.ERROR(f"Unexpected error: {e}"))
 
-        NewsSchema.objects.all().delete()
         NewsSchema.objects.bulk_create(news_list)

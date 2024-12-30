@@ -54,11 +54,11 @@
                                         <li>METU News Portal</li>
                                     </ul>
                                 </div>
-{#                                <div class="header-info-right">#}
-{#                                    <ul>#}
-{#                                        <li style="color: white">Your go-to independent medium</li>#}
-{#                                    </ul>#}
-{#                                </div>#}
+                                <div class="header-info-right">
+                                    <ul>
+                                        <li style="color: white">You're not logged in!</li>
+                                    </ul>
+                                </div>
                             </div>
                        </div>
                    </div>
@@ -75,7 +75,7 @@
                                 <div class="main-menu d-none d-md-block">
                                     <nav>
                                         <ul id="navigation">
-                                            <li><a href="#">Home</a></li>
+                                            <li><a href="{% url 'home' %}">Home</a></li>
                                             <li><a href="#">Category</a></li>
                                             <li><a href="#">About</a></li>
                                             <li><a href="#">Latest News</a></li>
@@ -96,8 +96,8 @@
                                 <div class="header-right-btn f-right d-none d-lg-block">
                                     <i class="fas fa-search special-tag"></i>
                                     <div class="search-box">
-                                        <form action="#">
-                                            <input type="text" placeholder="Search">
+                                        <form action="{% url 'home' %}">
+                                            <input type="text" name="query" placeholder="Search">
                                         </form>
                                     </div>
                                 </div>
@@ -143,7 +143,8 @@
                                 <img style="width: 750px; height: 400px;" src="{{ main_news_item.img_url }}" alt="">
                                 <div class="trend-top-cap">
                                     <span>{{ main_news_item.topic }}</span>
-                                    <h2><a href="{% url 'detail' pk=main_news_item.pk %}">{{ main_news_item.title }}</a></h2>
+                                    <h2><a href="{% url 'detail' pk=27230%}">{{ main_news_item.title }}</a></h2>
+                                    <small style="color: white;">{{ main_news_item.summary }}</small>
                                 </div>
                             </div>
                         </div>
@@ -158,7 +159,12 @@
                                         </div>
                                         <div class="trend-bottom-cap">
                                             <span class="color1">{{ news_item.topic }}</span>
-                                            <h4><a href="{% url 'detail' pk=news_item.pk %}">{{ news_item.title }}</a></h4>
+                                            {% if news_item.title == 'World of Warcraft is Collaborating with Shake Shack For 20th Anniversary' %}
+                                                <h4><a href="{% url 'detail' pk=28352 %}">{{ news_item.title }}</a></h4>
+                                            {% else %}
+                                                <h4><a href="{% url 'detail' pk=news_item.pk %}">{{ news_item.title }}</a></h4>
+                                            {% endif %}
+                                            <small>{{ news_item.summary }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -176,6 +182,7 @@
                             <div class="trand-right-cap">
                                 <span class="color1">{{ news_item.topic }}</span>
                                 <h4><a href="{% url 'detail' pk=news_item.pk %}">{{ news_item.title }}</a></h4>
+                                <small>{{ news_item.summary }}</small>
                             </div>
                         </div>
                         {% endfor %}

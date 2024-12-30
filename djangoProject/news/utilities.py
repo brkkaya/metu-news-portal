@@ -10,4 +10,5 @@ def convert_faiss_to_document(faiss_document: Document):
         url=faiss_document.metadata.get("url", None),
         date=faiss_document.metadata.get("date", None),
         topic=faiss_document.metadata.get("topic"),
+        summary=faiss_document.metadata.get("summary", None),
     )
