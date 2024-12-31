@@ -143,7 +143,7 @@
                                 <img style="width: 750px; height: 400px;" src="{{ main_news_item.img_url }}" alt="">
                                 <div class="trend-top-cap">
                                     <span>{{ main_news_item.topic }}</span>
-                                    <h2><a href="{% url 'detail' pk=27230%}">{{ main_news_item.title }}</a></h2>
+                                    <h2><a href="{% url 'detail' pk=main_news_item.pk%}">{{ main_news_item.title }}</a></h2>
                                     <small style="color: white;">{{ main_news_item.summary }}</small>
                                 </div>
                             </div>
